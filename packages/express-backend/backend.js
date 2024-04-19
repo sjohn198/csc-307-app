@@ -45,12 +45,10 @@ const findUserByNameAndJob = (name, job) =>  users["users_list"].find(
 );
 
 const addUser = (user) => {
-    console.log(user);
     const rand_id = Math.floor(Math.random() * 100000);
     const newJSON = { "id": "" + rand_id + "", ...user};
-    console.log(user);
     users["users_list"].push(newJSON);
-    return user;
+    return newJSON;
 };
 
 const remUser = (user) => { 
@@ -88,9 +86,7 @@ app.get("/users/:id", (req, res) => {
 });
 app.get("/users", (req, res) => {
     const name = req.query.name;
-    console.log(name)
     const job = req.query.job;
-    console.log(job)
     let result = findUserByNameAndJob(name, job);
     if (result === undefined) {
         res.status(404).send("Resource not found.");
@@ -101,14 +97,19 @@ app.get("/users", (req, res) => {
 
 app.post("/users", (req, res) => {
     const userToAdd = req.body;
-    addUser(userToAdd);
-    res.status(201).send("Created");
+    let result = addUser(userToAdd);
+    if (result === undefined) {
+        res.status(400).send("Bad POST Request");
+    } else {
+        result = JSON.stringify(result);
+        res.status(201).send(result);
+    }
 });
 
 app.delete("/users", (req, res) => {
     const userToRem = req.body;
     remUser(userToRem);
-    res.send();
+    res.status(204).send();
 })
 
 app.listen(port, () => {

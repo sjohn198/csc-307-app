@@ -45,7 +45,11 @@ const findUserByNameAndJob = (name, job) =>  users["users_list"].find(
 );
 
 const addUser = (user) => {
-    users["users_list"].push(user);
+    console.log(user);
+    const rand_id = Math.floor(Math.random() * 100000);
+    const newJSON = { "id": "" + rand_id + "", ...user};
+    console.log(user);
+    users["users_list"].push(newJSON);
     return user;
 };
 
@@ -98,7 +102,7 @@ app.get("/users", (req, res) => {
 app.post("/users", (req, res) => {
     const userToAdd = req.body;
     addUser(userToAdd);
-    res.send();
+    res.status(201).send("Created");
 });
 
 app.delete("/users", (req, res) => {

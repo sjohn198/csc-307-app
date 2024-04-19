@@ -11,15 +11,20 @@ function MyApp() {
     });
     setCharacters(updated);
   }
-  function postUser(person) {
-    const promise = fetch("http://localhost:8000/users", {
+  async function postUser(person) {
+    const promise = await fetch("http://localhost:8000/users", {
       method: "POST",
       headers: {
         "content-type": "application/json"
       },
       body: JSON.stringify(person)
     });
-    return promise;
+    console.log(promise.status);
+    if (promise.status == 201) {
+      return promise;
+    } else {
+      return Promise.reject(new Error("Wrong status code"))
+    }
   }
   function updateList(person){
     postUser(person)

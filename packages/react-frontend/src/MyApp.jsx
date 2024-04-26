@@ -5,7 +5,7 @@ import Form from "./Form";
 
 function MyApp() {
   const [characters, setCharacters] = useState([]);
-  async function removeOneCharacter(index) {
+  async function removeOneCharacter(index, id) {
     const updated = characters.filter((character, i) => {
       return i !== index;
     });
@@ -13,7 +13,7 @@ function MyApp() {
       return i == index;
     })
     console.log(updated);
-    const promise = await fetch("http://localhost:8000/users/" + target, {
+    const promise = await fetch("http://localhost:8000/users/" + id, {
       method: "DELETE",
       headers: {
         "content-type": "application/json"
@@ -49,13 +49,11 @@ function MyApp() {
   }
   function fetchUsers(){
     const promise = fetch("http://localhost:8000/users");
+    console.log(promise);
     return promise;
   }
-  useEffect(() => {
-    fetchUsers()
-                .then((res) => res.json())
-                .then((json) => setCharacters(json["users_list"]))
-                .catch((error) => { console.log(error); } );
+  useEffect(() => {  
+    fetchUsers().then((res) =>  res.json()).then((json) => setCharacters(json)).catch((error) => {console.log(error)});
   }, []);
   return (
     <div className="container">
